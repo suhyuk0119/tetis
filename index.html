@@ -28,6 +28,83 @@
       touch-action: manipulation;
     }
     h1 { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.25rem; }
+    .screen {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+    .screen--active {
+      display: flex;
+    }
+    #lobby {
+      max-width: 420px;
+      padding: 0.5rem 0.75rem 1.5rem;
+    }
+    .lobby-title {
+      font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+      margin: 0.25rem 0 0.5rem;
+      text-align: center;
+    }
+    .lobby-lead {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+      line-height: 1.45;
+      margin: 0 0 1rem;
+      max-width: 22rem;
+    }
+    .lobby-card {
+      width: 100%;
+      max-width: 360px;
+      background: var(--panel);
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      padding: 1.25rem 1.35rem 1.4rem;
+    }
+    .lobby-card > h2 {
+      margin: 0 0 0.75rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .lobby-preview {
+      margin: 0.75rem 0 0;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-align: center;
+    }
+    .lobby-preview strong {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    #btn-enter-game {
+      width: 100%;
+      margin-top: 1.1rem;
+      padding: 0.9rem 1rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(180deg, #58a6ff 0%, #388bfd 100%);
+      color: #0c0f14;
+      box-shadow: 0 6px 24px rgba(56, 139, 253, 0.4);
+    }
+    #btn-enter-game:active {
+      filter: brightness(0.95);
+    }
+    #game-shell {
+      max-width: 1100px;
+      width: 100%;
+    }
+    .game-title {
+      font-size: 1rem;
+      margin: 0 0 0.35rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
     .note {
       color: var(--muted);
       font-size: 0.78rem;
@@ -208,7 +285,9 @@
       user-select: none;
     }
     @media (max-width: 960px), (pointer: coarse) {
-      .touch-panel { display: block; }
+      #game-shell.screen--active .touch-panel {
+        display: block;
+      }
     }
     .touch-panel-inner {
       display: flex;
@@ -295,60 +374,73 @@
         max-width: 100%;
       }
       .hint { font-size: 0.74rem; padding: 0 0.25rem; }
-      .note { font-size: 0.72rem; }
-      h1 { font-size: 1.02rem; }
+      .game-title { font-size: 0.92rem; }
     }
   </style>
 </head>
 <body>
-  <h1>테트리스 · 가이드라인 솔로</h1>
-  <p class="note">테트리오처럼 보이는 <strong>솔로</strong> 조작·물리(SRS, 록 딜레이, DAS/ARR)에 가깝게 맞춤. 대전·계정·랭킹은 서버가 필요해 이 파일만으로는 동일 구현이 어렵습니다.</p>
-  <p class="hint">← → 이동 · ↑ 시계 회전 · Z 반시계 · ↓ 소프트 · 스페이스 하드 · ⇧ 홀드 · P 일시정지 · 목표 줄 달성 시 종료 · 좁은 화면·터치 기기에서는 하단 조이스틱·버튼 사용</p>
-  <div class="wrap">
-    <div class="side-left">
-      <h2>홀드</h2>
-      <canvas id="hold" class="hold-canvas" width="120" height="96" aria-label="홀드"></canvas>
-    </div>
-    <div class="board-wrap">
-      <canvas id="board" width="280" height="520" aria-label="보드"></canvas>
-    </div>
-    <aside>
-      <h2>스프린트</h2>
+  <section id="lobby" class="screen lobby screen--active" aria-label="스프린트 설정">
+    <h1 class="lobby-title">테트리스 스프린트</h1>
+    <p class="lobby-lead">목표 줄을 정한 뒤 <strong>게임 시작</strong>을 누르면 플레이 화면만 열립니다. 게임 중에는 이 설정 창이 나타나지 않습니다.</p>
+    <div class="lobby-card">
+      <h2>스프린트 설정</h2>
       <div class="goal-row">
         <label for="line-goal">목표 줄</label>
-        <input type="number" id="line-goal" min="1" max="500" value="40" step="1" />
+        <input type="number" id="line-goal" min="1" max="500" value="40" step="1" inputmode="numeric" />
       </div>
-      <div class="stat">경과(정지 제외) <strong id="elapsed">0.00</strong>s</div>
-      <h2>점수</h2>
-      <div class="stat">점수 <strong id="score">0</strong></div>
-      <div class="stat">줄 <strong id="lines">0</strong> / <span id="line-target">40</span></div>
-      <div class="stat">레벨 <strong id="level">1</strong></div>
-      <h2>다음 ×5</h2>
-      <canvas id="next" class="next-canvas" width="120" height="268"></canvas>
-      <div class="btns">
-        <button type="button" id="btn-start">시작 / 재시작</button>
-        <button type="button" id="btn-pause">일시정지</button>
+      <p class="lobby-preview">이번 판 목표: <strong id="line-target-lobby">40</strong>줄</p>
+      <button type="button" id="btn-enter-game">게임 시작</button>
+    </div>
+  </section>
+
+  <section id="game-shell" class="screen game-shell" aria-label="게임">
+    <p class="game-title">플레이 중</p>
+    <p class="hint">← → 이동 · ↑ 시계 · Z 반시계 · ↓ 소프트 · 스페이스 하드 · ⇧ 홀드 · P 일시정지 · 좁은 화면에서는 하단 조이스틱</p>
+    <div class="wrap">
+      <div class="side-left">
+        <h2>홀드</h2>
+        <canvas id="hold" class="hold-canvas" width="120" height="96" aria-label="홀드"></canvas>
       </div>
-      <div id="status"></div>
-    </aside>
-  </div>
-  <div id="touch-panel" class="touch-panel" aria-label="터치 조작">
-    <div class="touch-panel-inner">
-      <div class="joy-area">
-        <div id="joy-base" class="joy-base" role="application" aria-label="이동 조이스틱">
-          <div id="joy-knob" class="joy-knob"></div>
+      <div class="board-wrap">
+        <canvas id="board" width="280" height="520" aria-label="보드"></canvas>
+      </div>
+      <aside>
+        <h2>진행</h2>
+        <div class="stat">목표 <strong id="line-target">40</strong>줄</div>
+        <div class="stat">경과(정지 제외) <strong id="elapsed">0.00</strong>s</div>
+        <h2>점수</h2>
+        <div class="stat">점수 <strong id="score">0</strong></div>
+        <div class="stat">줄 <strong id="lines">0</strong> / <span id="line-target-denom">40</span></div>
+        <div class="stat">레벨 <strong id="level">1</strong></div>
+        <h2>다음 ×5</h2>
+        <canvas id="next" class="next-canvas" width="120" height="268"></canvas>
+        <div class="btns">
+          <button type="button" id="btn-game-restart">재시작</button>
+          <button type="button" id="btn-to-lobby">설정 화면</button>
+          <button type="button" id="btn-pause">일시정지</button>
         </div>
-        <span class="joy-caption">좌우 이동 · 아래로 밀면 소프트 드롭</span>
-      </div>
-      <div class="btn-grid">
-        <button type="button" class="tbtn" id="touch-cw">↻ 시계</button>
-        <button type="button" class="tbtn" id="touch-ccw">↺ 반시계</button>
-        <button type="button" class="tbtn tbtn-drop" id="touch-hard">하드 드롭</button>
-        <button type="button" class="tbtn" id="touch-hold">홀드</button>
-        <button type="button" class="tbtn" id="touch-pause">일시정지</button>
+        <div id="status"></div>
+      </aside>
+    </div>
+    <div id="touch-panel" class="touch-panel" aria-label="터치 조작">
+      <div class="touch-panel-inner">
+        <div class="joy-area">
+          <div id="joy-base" class="joy-base" role="application" aria-label="이동 조이스틱">
+            <div id="joy-knob" class="joy-knob"></div>
+          </div>
+          <span class="joy-caption">좌우 이동 · 아래로 밀면 소프트 드롭</span>
+        </div>
+        <div class="btn-grid">
+          <button type="button" class="tbtn" id="touch-cw">↻ 시계</button>
+          <button type="button" class="tbtn" id="touch-ccw">↺ 반시계</button>
+          <button type="button" class="tbtn tbtn-drop" id="touch-hard">하드 드롭</button>
+          <button type="button" class="tbtn" id="touch-hold">홀드</button>
+          <button type="button" class="tbtn" id="touch-pause">일시정지</button>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
   <div id="end-overlay" aria-live="polite">
     <div class="end-card">
       <h2 id="end-title" class="win">완주</h2>
@@ -360,7 +452,7 @@
       <p class="end-big" id="end-time">0.00초</p>
       <div class="end-actions">
         <button type="button" id="btn-new-game">새 게임</button>
-        <p class="end-hint">우측 패널의 시작 / 재시작과 같습니다.</p>
+        <p class="end-hint">목표 변경은 <strong>설정 화면</strong>으로 돌아가세요.</p>
       </div>
     </div>
   </div>
@@ -524,6 +616,10 @@
     const elapsedEl = document.getElementById("elapsed");
     const lineGoalInput = document.getElementById("line-goal");
     const lineTargetEl = document.getElementById("line-target");
+    const lineTargetDenomEl = document.getElementById("line-target-denom");
+    const lineTargetLobbyEl = document.getElementById("line-target-lobby");
+    const lobby = document.getElementById("lobby");
+    const gameShell = document.getElementById("game-shell");
     const endOverlay = document.getElementById("end-overlay");
     const endTitle = document.getElementById("end-title");
     const endLinesEl = document.getElementById("end-lines");
@@ -1037,6 +1133,41 @@
       raf = requestAnimationFrame(loop);
     }
 
+    function enterGameFromLobby() {
+      lobby.classList.remove("screen--active");
+      gameShell.classList.add("screen--active");
+      startGame();
+    }
+
+    function returnToLobby() {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      hideEndOverlay();
+      resetTouchJoy();
+      keyLeft = false;
+      keyRight = false;
+      dasLeft = 0;
+      dasRight = 0;
+      piece = null;
+      gameOver = false;
+      sprintWon = false;
+      paused = false;
+      emptyBoard();
+      nextQueue.length = 0;
+      ensureQueue();
+      drawBoard();
+      drawNext();
+      drawHold();
+      statusEl.textContent = "";
+      gameShell.classList.remove("screen--active");
+      lobby.classList.add("screen--active");
+    }
+
+    function syncLobbyTargetPreview() {
+      const v = lineGoalInput.value.trim();
+      lineTargetLobbyEl.textContent = v === "" ? "40" : v;
+    }
+
     function startGame() {
       cancelAnimationFrame(raf);
       hideEndOverlay();
@@ -1046,6 +1177,8 @@
       lineGoalInput.value = String(g);
       targetLines = g;
       lineTargetEl.textContent = String(targetLines);
+      lineTargetDenomEl.textContent = String(targetLines);
+      lineTargetLobbyEl.textContent = String(targetLines);
 
       emptyBoard();
       score = 0;
@@ -1076,7 +1209,9 @@
       raf = requestAnimationFrame(loop);
     }
 
-    document.getElementById("btn-start").addEventListener("click", startGame);
+    document.getElementById("btn-enter-game").addEventListener("click", enterGameFromLobby);
+    document.getElementById("btn-game-restart").addEventListener("click", startGame);
+    document.getElementById("btn-to-lobby").addEventListener("click", returnToLobby);
     document.getElementById("btn-new-game").addEventListener("click", startGame);
     document.getElementById("btn-pause").addEventListener("click", () => {
       if (gameOver || sprintWon || !piece) return;
@@ -1085,6 +1220,14 @@
     });
 
     function onKeyDown(e) {
+      const inGame = gameShell.classList.contains("screen--active");
+      if (!inGame) {
+        if (e.code === "Enter") {
+          document.getElementById("btn-enter-game").click();
+          e.preventDefault();
+        }
+        return;
+      }
       if ((gameOver || sprintWon) && e.code !== "Enter") return;
       if (e.code === "KeyP") {
         document.getElementById("btn-pause").click();
@@ -1149,17 +1292,21 @@
       }
     }
 
+    lineGoalInput.addEventListener("input", syncLobbyTargetPreview);
+
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
 
     emptyBoard();
     nextQueue.length = 0;
     ensureQueue();
-    lineTargetEl.textContent = lineGoalInput.value || "40";
+    syncLobbyTargetPreview();
+    const _g = parseInt(lineGoalInput.value, 10) || 40;
+    lineTargetEl.textContent = String(_g);
+    lineTargetDenomEl.textContent = String(_g);
     drawBoard();
     drawNext();
     drawHold();
-    statusEl.textContent = "목표 줄을 정한 뒤 시작 / 재시작을 누르세요.";
   </script>
 </body>
 </html>
