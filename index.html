@@ -99,6 +99,14 @@
       max-width: 1100px;
       width: 100%;
     }
+    .play-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+    }
     .game-title {
       font-size: 1rem;
       margin: 0 0 0.35rem;
@@ -283,6 +291,7 @@
       touch-action: none;
       -webkit-user-select: none;
       user-select: none;
+      flex-shrink: 0;
     }
     @media (max-width: 960px), (pointer: coarse) {
       #game-shell.screen--active .touch-panel {
@@ -299,6 +308,184 @@
       border-radius: 14px;
       border: 1px solid #30363d;
       background: rgba(21, 27, 38, 0.95);
+    }
+
+    @media (min-width: 769px) {
+      .play-stack {
+        flex: none;
+      }
+      .touch-panel-inner {
+        flex-direction: row-reverse;
+        justify-content: center;
+        align-items: flex-end;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body.game-active-screen {
+        overflow: hidden;
+        padding: 0;
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        overscroll-behavior: none;
+      }
+      body.game-active-screen #game-shell.screen--active {
+        flex: 1 1 0;
+        min-height: 0;
+        width: 100%;
+        max-height: 100%;
+      }
+      #game-shell.screen--active {
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
+        padding: 2px 0 0;
+        margin: 0;
+        max-width: 100%;
+        flex: 1;
+        min-height: 0;
+      }
+      #game-shell.screen--active .game-title,
+      #game-shell.screen--active .hint {
+        display: none;
+      }
+      #game-shell.screen--active .play-stack {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      #game-shell.screen--active .wrap {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        flex: 1 1 0;
+        min-height: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 2px;
+      }
+      #game-shell.screen--active .side-left {
+        width: 52px;
+        min-width: 52px;
+        max-width: 52px;
+        padding: 3px 2px;
+        flex-shrink: 0;
+      }
+      #game-shell.screen--active .side-left h2 {
+        font-size: 0.5rem;
+        margin: 0 0 2px;
+        letter-spacing: 0;
+      }
+      #game-shell.screen--active #hold {
+        width: 46px !important;
+        height: auto !important;
+        margin: 0 auto;
+        display: block;
+      }
+      #game-shell.screen--active .board-wrap {
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        height: 100%;
+        max-height: 100%;
+        max-width: calc(100vw - 112px);
+        aspect-ratio: 280 / 520;
+      }
+      #game-shell.screen--active aside {
+        width: 58px;
+        min-width: 58px;
+        max-width: 58px;
+        padding: 3px 2px;
+        font-size: 0.52rem;
+        flex-shrink: 0;
+      }
+      #game-shell.screen--active aside h2 {
+        font-size: 0.48rem;
+        margin: 0 0 1px;
+        letter-spacing: 0;
+      }
+      #game-shell.screen--active .stat {
+        margin-bottom: 0.12rem;
+        line-height: 1.15;
+      }
+      #game-shell.screen--active #next {
+        width: 52px !important;
+        max-width: 100%;
+        height: 88px !important;
+        margin-top: 0.15rem;
+      }
+      #game-shell.screen--active .btns {
+        margin-top: 0.25rem;
+        gap: 2px;
+      }
+      #game-shell.screen--active .btns button {
+        padding: 0.15rem 0.1rem;
+        font-size: 0.48rem;
+        border-radius: 4px;
+        line-height: 1.1;
+      }
+      #game-shell.screen--active #status {
+        font-size: 0.48rem;
+        margin-top: 0.2rem;
+        min-height: 0.9em;
+        line-height: 1.1;
+        word-break: keep-all;
+      }
+      #game-shell.screen--active .touch-panel {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 2px 4px calc(4px + env(safe-area-inset-bottom, 0px));
+      }
+      #game-shell.screen--active .touch-panel-inner {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 6px;
+        padding: 4px 6px 6px;
+        border-radius: 10px 10px 0 0;
+        max-width: 100%;
+      }
+      #game-shell.screen--active .btn-grid {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: calc(100% - 118px);
+        width: auto;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px;
+      }
+      #game-shell.screen--active .joy-area {
+        flex: 0 0 auto;
+        gap: 0;
+      }
+      #game-shell.screen--active .joy-caption {
+        display: none;
+      }
+      #game-shell.screen--active .joy-base {
+        width: 104px;
+        height: 104px;
+      }
+      #game-shell.screen--active .joy-knob {
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+      }
+      #game-shell.screen--active .tbtn {
+        min-height: 38px;
+        padding: 0.25rem 0.15rem;
+        font-size: 0.62rem;
+        border-radius: 8px;
+      }
     }
     .joy-area {
       display: flex;
@@ -363,7 +550,7 @@
       background: linear-gradient(180deg, #3d4f66 0%, #21262d 100%);
       border-color: #58a6ff;
     }
-    @media (max-width: 960px) {
+    @media (max-width: 960px) and (min-width: 769px) {
       .wrap {
         flex-direction: column;
         align-items: center;
@@ -373,8 +560,13 @@
         width: min(100%, 340px);
         max-width: 100%;
       }
-      .hint { font-size: 0.74rem; padding: 0 0.25rem; }
-      .game-title { font-size: 0.92rem; }
+      .hint {
+        font-size: 0.74rem;
+        padding: 0 0.25rem;
+      }
+      .game-title {
+        font-size: 0.92rem;
+      }
     }
   </style>
 </head>
@@ -396,46 +588,48 @@
   <section id="game-shell" class="screen game-shell" aria-label="게임">
     <p class="game-title">플레이 중</p>
     <p class="hint">← → 이동 · ↑ 시계 · Z 반시계 · ↓ 소프트 · 스페이스 하드 · ⇧ 홀드 · P 일시정지 · 좁은 화면에서는 하단 조이스틱</p>
-    <div class="wrap">
-      <div class="side-left">
-        <h2>홀드</h2>
-        <canvas id="hold" class="hold-canvas" width="120" height="96" aria-label="홀드"></canvas>
-      </div>
-      <div class="board-wrap">
-        <canvas id="board" width="280" height="520" aria-label="보드"></canvas>
-      </div>
-      <aside>
-        <h2>진행</h2>
-        <div class="stat">목표 <strong id="line-target">40</strong>줄</div>
-        <div class="stat">경과(정지 제외) <strong id="elapsed">0.00</strong>s</div>
-        <h2>점수</h2>
-        <div class="stat">점수 <strong id="score">0</strong></div>
-        <div class="stat">줄 <strong id="lines">0</strong> / <span id="line-target-denom">40</span></div>
-        <div class="stat">레벨 <strong id="level">1</strong></div>
-        <h2>다음 ×5</h2>
-        <canvas id="next" class="next-canvas" width="120" height="268"></canvas>
-        <div class="btns">
-          <button type="button" id="btn-game-restart">재시작</button>
-          <button type="button" id="btn-to-lobby">설정 화면</button>
-          <button type="button" id="btn-pause">일시정지</button>
+    <div class="play-stack">
+      <div class="wrap">
+        <div class="side-left">
+          <h2>홀드</h2>
+          <canvas id="hold" class="hold-canvas" width="120" height="96" aria-label="홀드"></canvas>
         </div>
-        <div id="status"></div>
-      </aside>
-    </div>
-    <div id="touch-panel" class="touch-panel" aria-label="터치 조작">
-      <div class="touch-panel-inner">
-        <div class="joy-area">
-          <div id="joy-base" class="joy-base" role="application" aria-label="이동 조이스틱">
-            <div id="joy-knob" class="joy-knob"></div>
+        <div class="board-wrap">
+          <canvas id="board" width="280" height="520" aria-label="보드"></canvas>
+        </div>
+        <aside>
+          <h2>진행</h2>
+          <div class="stat">목표 <strong id="line-target">40</strong>줄</div>
+          <div class="stat">경과(정지 제외) <strong id="elapsed">0.00</strong>s</div>
+          <h2>점수</h2>
+          <div class="stat">점수 <strong id="score">0</strong></div>
+          <div class="stat">줄 <strong id="lines">0</strong> / <span id="line-target-denom">40</span></div>
+          <div class="stat">레벨 <strong id="level">1</strong></div>
+          <h2>다음 ×5</h2>
+          <canvas id="next" class="next-canvas" width="120" height="268"></canvas>
+          <div class="btns">
+            <button type="button" id="btn-game-restart">재시작</button>
+            <button type="button" id="btn-to-lobby">설정 화면</button>
+            <button type="button" id="btn-pause">일시정지</button>
           </div>
-          <span class="joy-caption">좌우 이동 · 아래로 밀면 소프트 드롭</span>
-        </div>
-        <div class="btn-grid">
-          <button type="button" class="tbtn" id="touch-cw">↻ 시계</button>
-          <button type="button" class="tbtn" id="touch-ccw">↺ 반시계</button>
-          <button type="button" class="tbtn tbtn-drop" id="touch-hard">하드 드롭</button>
-          <button type="button" class="tbtn" id="touch-hold">홀드</button>
-          <button type="button" class="tbtn" id="touch-pause">일시정지</button>
+          <div id="status"></div>
+        </aside>
+      </div>
+      <div id="touch-panel" class="touch-panel" aria-label="터치 조작">
+        <div class="touch-panel-inner">
+          <div class="btn-grid">
+            <button type="button" class="tbtn" id="touch-cw">↻ 시계</button>
+            <button type="button" class="tbtn" id="touch-ccw">↺ 반시계</button>
+            <button type="button" class="tbtn tbtn-drop" id="touch-hard">하드 드롭</button>
+            <button type="button" class="tbtn" id="touch-hold">홀드</button>
+            <button type="button" class="tbtn" id="touch-pause">일시정지</button>
+          </div>
+          <div class="joy-area">
+            <div id="joy-base" class="joy-base" role="application" aria-label="이동 조이스틱">
+              <div id="joy-knob" class="joy-knob"></div>
+            </div>
+            <span class="joy-caption">좌우 이동 · 아래로 밀면 소프트 드롭</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1133,9 +1327,15 @@
       raf = requestAnimationFrame(loop);
     }
 
+    function setGameBodyScrollLock(on) {
+      if (!window.matchMedia("(max-width: 768px)").matches) return;
+      document.body.classList.toggle("game-active-screen", !!on);
+    }
+
     function enterGameFromLobby() {
       lobby.classList.remove("screen--active");
       gameShell.classList.add("screen--active");
+      setGameBodyScrollLock(true);
       startGame();
     }
 
@@ -1161,6 +1361,7 @@
       statusEl.textContent = "";
       gameShell.classList.remove("screen--active");
       lobby.classList.add("screen--active");
+      setGameBodyScrollLock(false);
     }
 
     function syncLobbyTargetPreview() {
